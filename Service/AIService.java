@@ -15,10 +15,14 @@ public class AIService {
     }
 
     public static ResponseEntity<String> getAns(String provider, String prompt){
-        String res = providerMap.get(provider).call(prompt);
-        if(!res.isEmpty())
+
+        try{
+            String res = providerMap.get(provider).call(prompt);
+            if(res.isEmpty()) return ResponseEntity.ok("No Response");
             return ResponseEntity.ok(res);
-        else
-            return ResponseEntity.status(500).body("Couldn't reach model");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(503).body("Service Unavailable");
+        }
     }
 }
